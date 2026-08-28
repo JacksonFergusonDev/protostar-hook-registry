@@ -44,8 +44,14 @@ typecheck: sync
     uv run mypy .
     @printf "{{ green }}✔ Type checking passed{{ nc }}\n"
 
+# Run tests
+test: sync
+    @printf "\n{{ blue }}=== Running Tests ==={{ nc }}\n"
+    uv run pytest
+    @printf "{{ green }}✔ Tests passed{{ nc }}\n"
+
 # Run the fast local CI pipeline executed before pushing
-ci: lint typecheck
+ci: lint typecheck test
     @printf "\n{{ green }}✔ Local CI pipeline completed successfully. Clear to push!{{ nc }}\n"
 
 # Remove caches, artifacts, and temp files

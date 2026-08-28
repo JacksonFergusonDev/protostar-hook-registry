@@ -30,6 +30,11 @@ jobs:
         with:
           enable-cache: true
 
+      - name: Install dependencies
+        run: |
+          uv sync --locked
+          uv pip install pytest-github-actions-annotate-failures
+
       - name: Run Ruff Linter
         run: uv run ruff check --output-format=github .
 
@@ -38,3 +43,6 @@ jobs:
 
       - name: Type check with Mypy
         run: uv run mypy .
+
+      - name: Run tests with Pytest
+        run: uv run pytest

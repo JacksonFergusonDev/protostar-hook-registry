@@ -25,9 +25,7 @@
         "pre-commit"
       ],
       "automerge": true,
-      "minimumReleaseAge": "0 days",
-      "requiredStatusChecks": null,
-      "ignoreTests": true
+      "minimumReleaseAge": "1 day"
     }
   ]
 }

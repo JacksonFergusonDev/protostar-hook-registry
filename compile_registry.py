@@ -10,7 +10,6 @@ from typing import Any
 
 import yaml
 
-EXPECTED_SCHEMA_VERSION = 1
 # Stricter URL regex to ensure clean https git targets
 URL_REGEX = re.compile(r"^https://[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$")
 # Reject commit hashes and prerelease tags (rc, alpha, beta, dev)
@@ -95,22 +94,31 @@ def validate_and_compile(source: Path, destination: Path) -> None:
             )
             sys.exit(1)
 
+        if repo_url in hooks_mapping:
+            print(f"ERROR: Duplicate repo URL detected: '{repo_url}'", file=sys.stderr)
+            sys.exit(1)
+
         hooks_mapping[repo_url] = rev
 
     # 4. Final Payload Assembly
     registry = {
-        "schema_version": EXPECTED_SCHEMA_VERSION,
+        "schema_version": 1,
         "hooks": hooks_mapping,
     }
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     temp_destination = destination.with_suffix(".tmp")
 
-    with temp_destination.open("w", encoding="utf-8") as f:
-        json.dump(registry, f, indent=2, sort_keys=True)
-        f.write("\n")
+    try:
+        with temp_destination.open("w", encoding="utf-8") as f:
+            json.dump(registry, f, indent=2, sort_keys=True)
+            f.write("\n")
 
-    temp_destination.replace(destination)
+        temp_destination.replace(destination)
+    except Exception:
+        temp_destination.unlink(missing_ok=True)
+        raise
+
     print(
         f"Verified & compiled {len(hooks_mapping)} hook revisions to '{destination}'."
     )

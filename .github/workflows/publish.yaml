@@ -34,7 +34,7 @@ jobs:
           enable-cache: true
 
       - name: Compile JSON Registry
-        run: uv run --no-dev compile_registry.py
+        run: uv run --no-dev --locked compile_registry.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
