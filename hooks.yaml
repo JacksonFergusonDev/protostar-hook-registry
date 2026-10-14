@@ -19,3 +19,7 @@ repos:
     rev: 44.65.5
     hooks:
       - id: renovate-config-validator
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
